@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.DataSerializable;
-import com.sun.xml.internal.fastinfoset.stax.events.ReadIterator;
 
 public class Movie implements DataSerializable {
 	

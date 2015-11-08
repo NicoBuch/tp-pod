@@ -14,6 +14,7 @@ public class Main {
 		QueryRunner argParser = new QueryRunner(args, client);
 		argParser.runQuery();
 
+
 		// TODO: This and MAP_NAME should be in QueryRunner
 		/*
 		 * // Preparar la particion de datos y distribuirla en el cluster a

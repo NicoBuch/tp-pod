@@ -1,7 +1,6 @@
 package back.core;
 
 import back.model.FormulaTupla;
-import back.model.Votacion;
 
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
