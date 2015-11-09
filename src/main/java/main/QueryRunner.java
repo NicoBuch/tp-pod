@@ -1,14 +1,14 @@
 package main;
 
-import back.model.Movie;
-import back.utils.Analyzer;
-
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
-import front.service.MovieReader;
+import back.model.Movie;
+import back.utils.Analyzer;
+import service.MovieReader;
 
 public class QueryRunner {
 

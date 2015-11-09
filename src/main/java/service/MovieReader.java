@@ -1,4 +1,4 @@
-package front.service;
+package service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
