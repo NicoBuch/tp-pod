@@ -28,7 +28,7 @@ public class MovieReader {
 //		Movie[] movies = new ObjectMapper().readValue(aReader, Movie[].class);
 		for(Movie m : movies){
 			if(m.isMovie()){
-				theIMap.set(m.getTitle() + "-" + m.getDirector(), m);				
+				theIMap.put(m.getTitle() + "-" + m.getDirector(), m);	
 			}
 		}
 	}

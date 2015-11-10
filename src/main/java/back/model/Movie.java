@@ -122,7 +122,7 @@ public class Movie implements DataSerializable {
 	}
 	
 	public boolean isMovie(){
-		return type == "movie";
+		return "movie".equals(type);
 	}
 	
 		

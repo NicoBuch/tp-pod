@@ -1,14 +1,20 @@
 package main;
 
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import service.MovieReader;
+import back.core.Mapper_1;
+import back.core.Reducer_1;
+import back.model.Movie;
+import back.utils.Analyzer;
+
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
-
-import back.model.Movie;
-import back.utils.Analyzer;
-import service.MovieReader;
 
 public class QueryRunner {
 
@@ -27,14 +33,14 @@ public class QueryRunner {
 		IMap<String, Movie> myMap = client.getMap("imdb");
 		MovieReader reader = new MovieReader(path);
 		JobTracker tracker = client.getJobTracker("default");
-		KeyValueSource<String, Movie> source = KeyValueSource.fromMap(myMap);
-		Job<String, Movie> job = tracker.newJob(source);
-
 		try {
 			reader.readMovies(myMap);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		KeyValueSource<String, Movie> source = KeyValueSource.fromMap(myMap);
+		Job<String, Movie> job = tracker.newJob(source);
+
 
 		switch (query) {
 		case QueryType.QUERY_1:
@@ -58,11 +64,23 @@ public class QueryRunner {
 
 	private void analyzeQuery1(Job<String, Movie> job) {
 		String n = analyzer.get("N").toString();
-		// ICompletableFuture<Map<String, FormulaTupla>> future = job
-		// .mapper(new Mapper_5())
-		// .reducer(new Reducer_5())
-		// .submit();
-
+		ICompletableFuture<Map<String, Integer>> future = job
+		 .mapper(new Mapper_1())
+		 .reducer(new Reducer_1())
+		 .submit();
+		try {
+			Map<String, Integer> rta = future.get();
+			System.out.println(rta);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 
 	private void analyzeQuery2(Job<String, Movie> job) {

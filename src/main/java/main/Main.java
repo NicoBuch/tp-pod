@@ -3,9 +3,6 @@ package main;
 
 import java.util.concurrent.ExecutionException;
 
-import main.HazelcastBootstrapper;
-import main.QueryRunner;
-
 import com.hazelcast.core.HazelcastInstance;
 
 public class Main {
