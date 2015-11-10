@@ -1,9 +1,12 @@
 package main;
 
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
 import service.MovieReader;
+import back.core.ActorVotesCollator;
 import back.core.Mapper_1;
 import back.core.Reducer_1;
 import back.model.Movie;
@@ -30,7 +33,7 @@ public class QueryRunner {
 		int query = Integer.valueOf(analyzer.get("QUERY").toString());
 		String path = analyzer.get("PATH").toString();
 
-		IMap<String, Movie> myMap = client.getMap("imdb");
+		IMap<String, Movie> myMap = client.getMap("a");
 		MovieReader reader = new MovieReader(path);
 		JobTracker tracker = client.getJobTracker("default");
 		try {
@@ -63,14 +66,19 @@ public class QueryRunner {
 	}
 
 	private void analyzeQuery1(Job<String, Movie> job) {
-		String n = analyzer.get("N").toString();
-		ICompletableFuture<Map<String, Integer>> future = job
+		String stringN = analyzer.get("N").toString();
+		Integer n = Integer.valueOf(stringN);
+		ICompletableFuture<PriorityQueue<Entry<String, Long>>> future = job
 		 .mapper(new Mapper_1())
 		 .reducer(new Reducer_1())
-		 .submit();
+		 .submit(new ActorVotesCollator());
 		try {
-			Map<String, Integer> rta = future.get();
-			System.out.println(rta);
+			PriorityQueue<Entry<String, Long>> rta = future.get();
+			System.out.println("Los " + n  + " actores más votados fueron:");
+			for(int i = 0; i < n; i++){
+				Entry<String, Long> actorWithVotes = rta.remove();
+				System.out.println(actorWithVotes.getKey() + ": " + actorWithVotes.getValue() + " votos");
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

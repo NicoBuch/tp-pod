@@ -3,27 +3,26 @@ package back.core;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-public class Reducer_1 implements ReducerFactory<String, Integer, Integer> 
+public class Reducer_1 implements ReducerFactory<String, Long, Long> 
 {
-    public Reducer<Integer, Integer> newReducer(final String actor) 
+    public Reducer<Long, Long> newReducer(final String actor) 
     {
-        return new Reducer<Integer, Integer>()
+        return new Reducer<Long, Long>()
 	    {
-	        private Integer sum;
+	        private Long sum;
 	        
 	        public void beginReduce()  // una sola vez en cada instancia
 	        {
-	            sum= 0;
+	            sum = 0L;
 	        }
 	
-	        public void reduce(Integer value) 
+	        public void reduce(Long value) 
 	        {
 	        	sum += value;
 	        }
 	
-	        public Integer finalizeReduce() 
+	        public Long finalizeReduce() 
 	        {
-	        	System.out.println(String.format("FinalReduce for %s = %s", actor, sum));
 	            return sum;
 	        }
 	    };
