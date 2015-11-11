@@ -11,6 +11,7 @@ public class FlexibleFloatDeserializer extends JsonDeserializer<Integer> {
     @Override
     public Integer deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
+    	
         String floatString = parser.getText();
         if (floatString.contains(",")) {
             floatString = floatString.replace(",", "");
