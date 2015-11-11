@@ -30,13 +30,4 @@ public class MaxCoupleCollator implements Collator<Map.Entry<ActorCouple, List<S
 		  return map;
 	  }
 	  
-	  
-	  private class ActorComparator implements Comparator<Entry<String, Integer>>{
-
-		public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
-			//Biggest first
-			return -1*(o1.getValue().compareTo(o2.getValue()));
-		}
-		  
-	  }
 }
