@@ -43,7 +43,9 @@ public class QueryRunner {
 		MovieReader reader = new MovieReader(path);
 		JobTracker tracker = client.getJobTracker("default");
 		try {
+			long startReading = System.currentTimeMillis();
 			reader.readMovies(myMap);
+			System.out.println("Tiempo de lectura del archivo en ms: " + (System.currentTimeMillis() - startReading));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -51,7 +53,7 @@ public class QueryRunner {
 		KeyValueSource<String, Movie> source = KeyValueSource.fromMap(myMap);
 		Job<String, Movie> job = tracker.newJob(source);
 
-
+		long startWorking = System.currentTimeMillis();
 		switch (query) {
 		case QueryType.QUERY_1:
 			analyzeQuery1(job);
@@ -69,6 +71,7 @@ public class QueryRunner {
 			System.out.println("Incorrect query!");
 			System.exit(1);
 		}
+		System.out.println("El map reduce duró: " + (System.currentTimeMillis() - startWorking));
 		analyzer.dump();
 	}
 
@@ -81,6 +84,7 @@ public class QueryRunner {
 		 .submit(new ActorVotesCollator());
 		try {
 			PriorityQueue<Entry<String, Integer>> rta = future.get();
+			
 			System.out.println("Los " + n  + " actores más votados fueron:");
 			for(int i = 0; i < n; i++){
 				Entry<String, Integer> actorWithVotes = rta.remove();

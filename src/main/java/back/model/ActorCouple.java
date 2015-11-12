@@ -49,7 +49,7 @@ public class ActorCouple implements DataSerializable{
 	
 	@Override
 	public String toString() {
-		return "[ " + actor1 + ", " + actor2 + " ]";
+		return actor1 + " y " + actor2;
 	}
 
 	@Override
