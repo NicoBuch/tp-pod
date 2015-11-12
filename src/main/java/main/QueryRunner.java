@@ -10,9 +10,12 @@ import service.MovieReader;
 import back.core.ActorVotesCollator;
 import back.core.Mapper_1;
 import back.core.Mapper_3;
+import back.core.Mapper_4;
+import back.core.MaxActorsPerDirectorCollator;
 import back.core.MaxCoupleCollator;
 import back.core.Reducer_1;
 import back.core.Reducer_3;
+import back.core.Reducer_4;
 import back.model.ActorCouple;
 import back.model.Movie;
 import back.utils.Analyzer;
@@ -127,5 +130,23 @@ public class QueryRunner {
 	}
 
 	private void analyzeQuery4(Job<String, Movie> job) {
+		ICompletableFuture<Map<String, List<String>>> future = job
+				 .mapper(new Mapper_4())
+				 .reducer(new Reducer_4())
+				 .submit(new MaxActorsPerDirectorCollator());
+		
+		Map<String, List<String>> rta;
+		try {
+			rta = future.get();
+			for(Entry<String, List<String>> entry : rta.entrySet()){
+				System.out.println(entry.getKey() + ": " + entry.getValue());
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
