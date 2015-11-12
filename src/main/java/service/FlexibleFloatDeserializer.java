@@ -8,19 +8,18 @@ import org.codehaus.jackson.map.JsonDeserializer;
 
 public class FlexibleFloatDeserializer extends JsonDeserializer<Integer> {
 
-    @Override
-    public Integer deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException {
-    	
-        String floatString = parser.getText();
-        if (floatString.contains(",")) {
-            floatString = floatString.replace(",", "");
-        }
-        
-        if(floatString.equals("N/A")){
-        	return Integer.valueOf(0);
-        }
-        return Integer.valueOf(floatString);
-    }
+	@Override
+	public Integer deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+
+		String floatString = parser.getText();
+		if (floatString.contains(",")) {
+			floatString = floatString.replace(",", "");
+		}
+
+		if (floatString.equals("N/A")) {
+			return Integer.valueOf(0);
+		}
+		return Integer.valueOf(floatString);
+	}
 
 }

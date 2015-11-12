@@ -25,6 +25,7 @@ public class Analyzer {
 
 		for (int i = 0; i < args.length; i++) {
 			String parameter = args[i];
+			@SuppressWarnings("resource")
 			Scanner scanner = new Scanner(parameter);
 			scanner.useDelimiter("=");
 			String vble = scanner.next();

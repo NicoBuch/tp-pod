@@ -11,7 +11,7 @@ public class HazelcastBootstrapper {
 
 		// TODO: Where do I get these properties from?
 		String name = System.getProperty("name");
-		if(name == null){
+		if (name == null) {
 			name = "dev";
 		}
 		String pass = System.getProperty("pass");

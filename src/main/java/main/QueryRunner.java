@@ -40,7 +40,7 @@ public class QueryRunner {
 	public void runQuery() {
 		int query = Integer.valueOf(analyzer.get("QUERY").toString());
 		String path = analyzer.get("PATH").toString();
-		
+
 		IMap<String, Movie> myMap = client.getMap("query:" + query + "-data:" + path);
 		myMap.clear();
 		MovieReader reader = new MovieReader(path);
@@ -52,7 +52,7 @@ public class QueryRunner {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		KeyValueSource<String, Movie> source = KeyValueSource.fromMap(myMap);
 		Job<String, Movie> job = tracker.newJob(source);
 
@@ -81,15 +81,13 @@ public class QueryRunner {
 	private void analyzeQuery1(Job<String, Movie> job) {
 		String stringN = analyzer.get("N").toString();
 		Integer n = Integer.valueOf(stringN);
-		ICompletableFuture<PriorityQueue<Entry<String, Integer>>> future = job
-		 .mapper(new Mapper_1())
-		 .reducer(new Reducer_1())
-		 .submit(new ActorVotesCollator());
+		ICompletableFuture<PriorityQueue<Entry<String, Integer>>> future = job.mapper(new Mapper_1())
+				.reducer(new Reducer_1()).submit(new ActorVotesCollator());
 		try {
 			PriorityQueue<Entry<String, Integer>> rta = future.get();
-			
-			System.out.println("Los " + n  + " actores más votados fueron:");
-			for(int i = 0; i < n; i++){
+
+			System.out.println("Los " + n + " actores más votados fueron:");
+			for (int i = 0; i < n; i++) {
 				Entry<String, Integer> actorWithVotes = rta.remove();
 				System.out.println(actorWithVotes.getKey() + ": " + actorWithVotes.getValue() + " votos");
 			}
@@ -100,9 +98,7 @@ public class QueryRunner {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+
 	}
 
 	private void analyzeQuery2(Job<String, Movie> job) {
@@ -110,14 +106,12 @@ public class QueryRunner {
 	}
 
 	private void analyzeQuery3(Job<String, Movie> job) {
-		ICompletableFuture<Map<ActorCouple, List<String>>> future = job
-		 .mapper(new Mapper_3())
-		 .reducer(new Reducer_3())
-		 .submit(new MaxCoupleCollator());
+		ICompletableFuture<Map<ActorCouple, List<String>>> future = job.mapper(new Mapper_3()).reducer(new Reducer_3())
+				.submit(new MaxCoupleCollator());
 		try {
 			Map<ActorCouple, List<String>> rta = future.get();
 			System.out.println("Las parejas de actores que más veces actuaron juntos fueron: ");
-			for(Entry<ActorCouple, List<String>> entry : rta.entrySet()){
+			for (Entry<ActorCouple, List<String>> entry : rta.entrySet()) {
 				System.out.println(entry.getKey() + ": " + entry.getValue());
 			}
 		} catch (InterruptedException e) {
@@ -130,15 +124,13 @@ public class QueryRunner {
 	}
 
 	private void analyzeQuery4(Job<String, Movie> job) {
-		ICompletableFuture<Map<String, List<String>>> future = job
-				 .mapper(new Mapper_4())
-				 .reducer(new Reducer_4())
-				 .submit(new MaxActorsPerDirectorCollator());
-		
+		ICompletableFuture<Map<String, List<String>>> future = job.mapper(new Mapper_4()).reducer(new Reducer_4())
+				.submit(new MaxActorsPerDirectorCollator());
+
 		Map<String, List<String>> rta;
 		try {
 			rta = future.get();
-			for(Entry<String, List<String>> entry : rta.entrySet()){
+			for (Entry<String, List<String>> entry : rta.entrySet()) {
 				System.out.println(entry.getKey() + ": " + entry.getValue());
 			}
 		} catch (InterruptedException e) {
