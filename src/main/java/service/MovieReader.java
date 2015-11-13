@@ -26,8 +26,7 @@ public class MovieReader {
 		Reader aReader = new InputStreamReader(MovieReader.class.getResourceAsStream(filepath));
 		List<Movie> movies = new ObjectMapper().readValue(aReader, new TypeReference<List<Movie>>() {
 		});
-		// Movie[] movies = new ObjectMapper().readValue(aReader,
-		// Movie[].class);
+//		 Movie[] movies = new ObjectMapper().readValue(aReader, Movie[].class);
 		for (Movie m : movies) {
 			if (m.isMovie()) {
 				theIMap.put(m.getTitle(), m);
