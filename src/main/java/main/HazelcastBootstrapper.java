@@ -9,7 +9,6 @@ public class HazelcastBootstrapper {
 
 	public static HazelcastInstance boorstrap() {
 
-		// TODO: Where do I get these properties from?
 		String name = System.getProperty("name");
 		if (name == null) {
 			name = "dev";
@@ -18,7 +17,7 @@ public class HazelcastBootstrapper {
 		if (pass == null) {
 			pass = "dev-pass";
 		}
-		System.out.println(String.format("Connecting with cluster dev-name [%s]", name));
+		System.out.println(String.format("Connecting with cluster: %s:%s", name, pass));
 
 		ClientConfig ccfg = new ClientConfig();
 		ccfg.getGroupConfig().setName(name).setPassword(pass);
