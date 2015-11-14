@@ -27,6 +27,10 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import back.core.Collector_2;
+import back.core.Mapper_2;
+import back.core.Reducer_2;
+
 public class QueryRunner {
 
 	private Analyzer analyzer;
@@ -45,6 +49,7 @@ public class QueryRunner {
 		myMap.clear();
 		MovieReader reader = new MovieReader(path);
 		JobTracker tracker = client.getJobTracker("default");
+
 		try {
 			long startReading = System.currentTimeMillis();
 			reader.readMovies(myMap);
@@ -103,6 +108,18 @@ public class QueryRunner {
 
 	private void analyzeQuery2(Job<String, Movie> job) {
 		String tope = analyzer.get("TOPE").toString();
+		ICompletableFuture<PriorityQueue<Entry<String, List<Movie>>>> future = job.mapper(new Mapper_2(tope))
+				.reducer(new Reducer_2()).submit(new Collector_2());
+		try {
+			PriorityQueue<Entry<String, List<Movie>>> rta = future.get();
+
+			for (int i = 0; i < rta.size(); i++) {
+				Entry<String, List<Movie>> actorWithVotes = rta.remove();
+				System.out.println(actorWithVotes.getKey() + ": " + actorWithVotes.getValue() + " votos");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void analyzeQuery3(Job<String, Movie> job) {
