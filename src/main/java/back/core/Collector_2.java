@@ -17,7 +17,6 @@ public class Collector_2
 	public PriorityQueue<Entry<String, List<Movie>>> collate(Iterable<Entry<String, List<Movie>>> values) {
 		PriorityQueue<Entry<String, List<Movie>>> answer = new PriorityQueue<Entry<String, List<Movie>>>(
 				new MovieComparator());
-		System.out.println(values);
 		for (Entry<String, List<Movie>> entry : values) {
 			answer.offer(entry);
 		}

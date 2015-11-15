@@ -20,7 +20,6 @@ public class Reducer_2 implements ReducerFactory<String, Movie, List<Movie>> {
 
 			@Override
 			public void beginReduce() {
-				super.beginReduce();
 				maxMetascore = 0;
 				movies = new ArrayList<Movie>();
 			}

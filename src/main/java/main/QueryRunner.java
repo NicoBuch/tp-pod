@@ -114,8 +114,8 @@ public class QueryRunner {
 			PriorityQueue<Entry<String, List<Movie>>> rta = future.get();
 
 			for (int i = 0; i < rta.size(); i++) {
-				Entry<String, List<Movie>> actorWithVotes = rta.remove();
-				System.out.println(actorWithVotes.getKey() + ": " + actorWithVotes.getValue() + " votos");
+				Entry<String, List<Movie>> yearWithMovies = rta.remove();
+				System.out.println(yearWithMovies.getKey() + ": " + yearWithMovies.getValue());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
