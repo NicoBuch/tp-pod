@@ -54,18 +54,10 @@ public class ActorCouple implements DataSerializable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-//		if(actor1.hashCode() > actor2.hashCode()){
-			result = prime * result + ((actor1 == null) ? 0 : actor1.hashCode());
-			result = prime * result + ((actor2 == null) ? 0 : actor2.hashCode());			
-//		}
-//		else{
-//			result = prime * result + ((actor2 == null) ? 0 : actor2.hashCode());
-//			result = prime * result + ((actor1 == null) ? 0 : actor1.hashCode());			
-//		}
-		
-		return result;
+	    int res = 17;
+	    res = res * 31 + Math.min(actor1.hashCode(), actor2.hashCode());
+	    res = res * 31 + Math.max(actor1.hashCode(), actor2.hashCode());
+	    return res;
 	}
 
 	@Override
