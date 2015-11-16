@@ -100,7 +100,7 @@ public class QueryRunner {
 		
 		System.out.println("Fin del trabajo de map reduce: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
 		
-		System.out.println("La lectura duró: " + (System.currentTimeMillis() - startWorking));
+		System.out.println("El map reduce duró: " + (System.currentTimeMillis() - startWorking));
 		
 		analyzer.dump();
 	}
