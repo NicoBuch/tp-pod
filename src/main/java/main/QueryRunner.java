@@ -56,7 +56,7 @@ public class QueryRunner {
 			reader.readMovies(myMap);
 			System.out.println("Tiempo de lectura del archivo en ms: " + (System.currentTimeMillis() - startReading));
 		} catch (Exception e) {
-			System.out.println("Ocurio un error en la lecutra");
+			System.out.println("Ocurrió un error en la lectura");
 			return;
 		}
 
@@ -129,7 +129,8 @@ public class QueryRunner {
 			System.out.println();
 			System.out.println("Las peliculas con mejor metascore por año mayores a " + tope + ", son:");
 			System.out.println();
-			for (int i = 0; i < rta.size(); i++) {
+			int queueSize = rta.size();
+			for (int i = 0; i < queueSize; i++) {
 				Entry<String, List<Movie>> yearWithMovies = rta.remove();
 				System.out.println(yearWithMovies.getKey() + ": " + yearWithMovies.getValue());
 			}
