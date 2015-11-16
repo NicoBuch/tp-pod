@@ -5,7 +5,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -31,11 +33,13 @@ public class MovieReader {
 		Reader aReader = new InputStreamReader(MovieReader.class.getResourceAsStream(filepath));
 		List<Movie> movies = new ObjectMapper().readValue(aReader, new TypeReference<List<Movie>>() {
 		});
+		Map<String, Movie> map = new HashMap<String, Movie>();
 		for (Movie m : movies) {
 			if (m.isMovie()) {
-				theIMap.put(m.getTitle(), m);
+				map.put(m.getTitle(), m);
 			}
 		}
+		theIMap.putAll(map);
 		System.out.println("Fin de lectura del archivo: "
 				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
 		System.out.println("La lectura duró: " + (System.currentTimeMillis() - startWorking));
