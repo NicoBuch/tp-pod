@@ -138,12 +138,8 @@ public class QueryRunner {
 			for (int i = 0; i < queueSize; i++) {
 				Entry<String, List<Movie>> yearWithMovies = rta.remove();
 				System.out.println(yearWithMovies.getKey() + ":");
-				for (Movie movie : yearWithMovies.getValue()) {
-					System.out.println("\t" + movie);
-				}
-				System.out.println();
+				printList(yearWithMovies.getValue());
 			}
-			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -159,11 +155,8 @@ public class QueryRunner {
 			System.out.println();
 			for (Entry<ActorCouple, List<String>> entry : rta.entrySet()) {
 				System.out.println(entry.getKey());
-				for (String movie : entry.getValue()) {
-					System.out.println("\t" + movie);
-				}
+				printList(entry.getValue());
 			}
-			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -181,13 +174,18 @@ public class QueryRunner {
 			rta = future.get();
 			for (Entry<String, List<String>> entry : rta.entrySet()) {
 				System.out.println(entry.getKey() + ":");
-				for (String actor : entry.getValue()) {
-					System.out.println("\t" + actor);
-				}
+				printList(entry.getValue());
 			}
-			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	private <T> void printList(List<T> l) {
+		for (T elem : l) {
+			System.out.println("\t" + elem);
+		}
+		System.out.println();
+	}
+
 }
