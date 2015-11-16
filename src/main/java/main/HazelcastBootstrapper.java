@@ -7,7 +7,7 @@ import com.hazelcast.core.HazelcastInstance;
 
 public class HazelcastBootstrapper {
 
-	public static HazelcastInstance boorstrap() {
+	public static HazelcastInstance bootstrap() {
 
 		String name = System.getProperty("name");
 		if (name == null) {
