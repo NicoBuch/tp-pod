@@ -1,18 +1,19 @@
 package main;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
-import java.util.concurrent.ExecutionException;
 
 import service.MovieReader;
-import back.core.ActorVotesCollator;
+import back.core.Collator_1;
 import back.core.Mapper_1;
 import back.core.Mapper_3;
 import back.core.Mapper_4;
-import back.core.MaxActorsPerDirectorCollator;
-import back.core.MaxCoupleCollator;
+import back.core.Collator_4;
+import back.core.Collator_3;
 import back.core.Reducer_1;
 import back.core.Reducer_3;
 import back.core.Reducer_4;
@@ -27,7 +28,7 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
-import back.core.Collector_2;
+import back.core.Collator_2;
 import back.core.Mapper_2;
 import back.core.Reducer_2;
 
@@ -61,6 +62,8 @@ public class QueryRunner {
 		KeyValueSource<String, Movie> source = KeyValueSource.fromMap(myMap);
 		Job<String, Movie> job = tracker.newJob(source);
 
+		System.out.println("Inicio del trabajo map/reduce: "
+				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
 		long startWorking = System.currentTimeMillis();
 		switch (query) {
 		case QueryType.QUERY_1:
@@ -79,6 +82,8 @@ public class QueryRunner {
 			System.out.println("Incorrect query!");
 			System.exit(1);
 		}
+		System.out.println("Fin del trabajo map/reduce: "
+				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
 		System.out.println("El map reduce duró: " + (System.currentTimeMillis() - startWorking));
 		analyzer.dump();
 	}
@@ -87,7 +92,7 @@ public class QueryRunner {
 		String stringN = analyzer.get("N").toString();
 		Integer n = Integer.valueOf(stringN);
 		ICompletableFuture<PriorityQueue<Entry<String, Integer>>> future = job.mapper(new Mapper_1())
-				.reducer(new Reducer_1()).submit(new ActorVotesCollator());
+				.reducer(new Reducer_1()).submit(new Collator_1());
 		try {
 			PriorityQueue<Entry<String, Integer>> rta = future.get();
 
@@ -96,20 +101,15 @@ public class QueryRunner {
 				Entry<String, Integer> actorWithVotes = rta.remove();
 				System.out.println(actorWithVotes.getKey() + ": " + actorWithVotes.getValue() + " votos");
 			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void analyzeQuery2(Job<String, Movie> job) {
 		String tope = analyzer.get("TOPE").toString();
 		ICompletableFuture<PriorityQueue<Entry<String, List<Movie>>>> future = job.mapper(new Mapper_2(tope))
-				.reducer(new Reducer_2()).submit(new Collector_2());
+				.reducer(new Reducer_2()).submit(new Collator_2());
 		try {
 			PriorityQueue<Entry<String, List<Movie>>> rta = future.get();
 
@@ -124,25 +124,21 @@ public class QueryRunner {
 
 	private void analyzeQuery3(Job<String, Movie> job) {
 		ICompletableFuture<Map<ActorCouple, List<String>>> future = job.mapper(new Mapper_3()).reducer(new Reducer_3())
-				.submit(new MaxCoupleCollator());
+				.submit(new Collator_3());
 		try {
 			Map<ActorCouple, List<String>> rta = future.get();
 			System.out.println("Las parejas de actores que más veces actuaron juntos fueron: ");
 			for (Entry<ActorCouple, List<String>> entry : rta.entrySet()) {
 				System.out.println(entry.getKey() + ": " + entry.getValue());
 			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void analyzeQuery4(Job<String, Movie> job) {
 		ICompletableFuture<Map<String, List<String>>> future = job.mapper(new Mapper_4()).reducer(new Reducer_4())
-				.submit(new MaxActorsPerDirectorCollator());
+				.submit(new Collator_4());
 
 		Map<String, List<String>> rta;
 		try {
@@ -150,11 +146,7 @@ public class QueryRunner {
 			for (Entry<String, List<String>> entry : rta.entrySet()) {
 				System.out.println(entry.getKey() + ": " + entry.getValue());
 			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

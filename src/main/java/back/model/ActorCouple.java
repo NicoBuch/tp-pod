@@ -6,14 +6,14 @@ import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.DataSerializable;
 
-public class ActorCouple implements DataSerializable{
-	
+public class ActorCouple implements DataSerializable {
+
 	private String actor2;
 	private String actor1;
-	
+
 	public ActorCouple() {
 	}
-	
+
 	public ActorCouple(String actor1, String actor2) {
 		this.actor1 = actor1;
 		this.actor2 = actor2;
@@ -35,18 +35,17 @@ public class ActorCouple implements DataSerializable{
 		this.actor2 = actor2;
 	}
 
-
 	public void readData(ObjectDataInput in) throws IOException {
 		actor1 = in.readUTF();
 		actor2 = in.readUTF();
-		
+
 	}
 
 	public void writeData(ObjectDataOutput out) throws IOException {
 		out.writeUTF(actor1);
-		out.writeUTF(actor2);		
+		out.writeUTF(actor2);
 	}
-	
+
 	@Override
 	public String toString() {
 		return actor1 + " y " + actor2;
@@ -54,10 +53,10 @@ public class ActorCouple implements DataSerializable{
 
 	@Override
 	public int hashCode() {
-	    int res = 17;
-	    res = res * 31 + Math.min(actor1.hashCode(), actor2.hashCode());
-	    res = res * 31 + Math.max(actor1.hashCode(), actor2.hashCode());
-	    return res;
+		int res = 17;
+		res = res * 31 + Math.min(actor1.hashCode(), actor2.hashCode());
+		res = res * 31 + Math.max(actor1.hashCode(), actor2.hashCode());
+		return res;
 	}
 
 	@Override
@@ -77,13 +76,13 @@ public class ActorCouple implements DataSerializable{
 			if (other.actor2 != null)
 				return false;
 		}
-		if(actor1 != null && actor2 != null){
-			if((actor1.equals(other.actor1) && actor2.equals(other.actor2)) || (actor1.equals(other.actor2) && actor2.equals(other.actor1))){
+		if (actor1 != null && actor2 != null) {
+			if ((actor1.equals(other.actor1) && actor2.equals(other.actor2))
+					|| (actor1.equals(other.actor2) && actor2.equals(other.actor1))) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	
 }

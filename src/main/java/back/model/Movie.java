@@ -40,7 +40,6 @@ public class Movie implements DataSerializable {
 	@JsonProperty("Type")
 	private String type;
 
-	// mantener el orden que se hizo en el write!
 	public void readData(ObjectDataInput in) throws IOException {
 		int actorsLength = in.readInt();
 		actors = new String[actorsLength];
@@ -54,7 +53,6 @@ public class Movie implements DataSerializable {
 		director = in.readUTF();
 	}
 
-	// mantener el orden que se hizo en el read!
 	public void writeData(ObjectDataOutput out) throws IOException {
 		out.writeInt(actors.length);
 		for (String actor : actors) {

@@ -11,8 +11,7 @@ import com.hazelcast.mapreduce.Collator;
 
 import back.model.Movie;
 
-public class Collector_2
-		implements Collator<Map.Entry<String, List<Movie>>, PriorityQueue<Entry<String, List<Movie>>>> {
+public class Collator_2 implements Collator<Map.Entry<String, List<Movie>>, PriorityQueue<Entry<String, List<Movie>>>> {
 
 	public PriorityQueue<Entry<String, List<Movie>>> collate(Iterable<Entry<String, List<Movie>>> values) {
 		PriorityQueue<Entry<String, List<Movie>>> answer = new PriorityQueue<Entry<String, List<Movie>>>(
@@ -26,9 +25,9 @@ public class Collector_2
 	private class MovieComparator implements Comparator<Entry<String, List<Movie>>> {
 
 		public int compare(Entry<String, List<Movie>> o1, Entry<String, List<Movie>> o2) {
-			return  Integer.valueOf(o2.getKey()) - Integer.valueOf(o1.getKey());
+			return Integer.valueOf(o2.getKey()) - Integer.valueOf(o1.getKey());
 		}
 
 	}
 
-} 
+}
