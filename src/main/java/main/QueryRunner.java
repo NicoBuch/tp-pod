@@ -81,7 +81,7 @@ public class QueryRunner {
 			break;
 		default:
 			System.out.println("Incorrect query!");
-			System.exit(1);
+			return;
 		}
 		System.out.println("Fin del trabajo map/reduce: "
 				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
@@ -90,7 +90,7 @@ public class QueryRunner {
 	}
 
 	private void analyzeQuery1(Job<String, Movie> job) {
-		String stringN = analyzer.get("N").toString();
+		String stringN = analyzer.get("N") == null ? "1" : analyzer.get("N").toString();
 		Integer n = Integer.valueOf(stringN);
 		if (n < 0) {
 			System.out.println();
@@ -103,9 +103,14 @@ public class QueryRunner {
 		try {
 			PriorityQueue<Entry<String, Integer>> rta = future.get();
 			System.out.println();
-			System.out.println("Los " + n + " actores más votados fueron:");
+			if (n == 1) {
+				System.out.println("El actor más votado fue: ");
+			} else {
+				System.out.println("Los " + n + " actores más votados fueron:");
+			}
 			System.out.println();
-			for (int i = 0; i < n; i++) {
+			int size = rta.size();
+			for (int i = 0; i < n && i < size; i++) {
 				Entry<String, Integer> actorWithVotes = rta.remove();
 				System.out.println(actorWithVotes.getKey() + ": " + actorWithVotes.getValue() + " votos");
 			}
@@ -116,7 +121,7 @@ public class QueryRunner {
 	}
 
 	private void analyzeQuery2(Job<String, Movie> job) {
-		String tope = analyzer.get("TOPE").toString();
+		String tope = analyzer.get("TOPE") == null ? "0" : analyzer.get("TOPE").toString();
 		if (Integer.valueOf(tope) < 0) {
 			System.out.println();
 			System.out.println("TOPE debe ser mayor o igual a 0, se usara TOPE=0");
@@ -131,7 +136,11 @@ public class QueryRunner {
 			System.out.println();
 			for (int i = 0; i < rta.size(); i++) {
 				Entry<String, List<Movie>> yearWithMovies = rta.remove();
-				System.out.println(yearWithMovies.getKey() + ": " + yearWithMovies.getValue());
+				System.out.println(yearWithMovies.getKey() + ":");
+				for (Movie movie : yearWithMovies.getValue()) {
+					System.out.println("\t" + movie);
+				}
+				System.out.println();
 			}
 			System.out.println();
 		} catch (Exception e) {
@@ -148,7 +157,10 @@ public class QueryRunner {
 			System.out.println("Las parejas de actores que más veces actuaron juntos fueron: ");
 			System.out.println();
 			for (Entry<ActorCouple, List<String>> entry : rta.entrySet()) {
-				System.out.println(entry.getKey() + ": " + entry.getValue());
+				System.out.println(entry.getKey());
+				for (String movie : entry.getValue()) {
+					System.out.println("\t" + movie);
+				}
 			}
 			System.out.println();
 		} catch (Exception e) {
@@ -167,7 +179,10 @@ public class QueryRunner {
 			System.out.println();
 			rta = future.get();
 			for (Entry<String, List<String>> entry : rta.entrySet()) {
-				System.out.println(entry.getKey() + ": " + entry.getValue());
+				System.out.println(entry.getKey() + ":");
+				for (String actor : entry.getValue()) {
+					System.out.println("\t" + actor);
+				}
 			}
 			System.out.println();
 		} catch (Exception e) {
