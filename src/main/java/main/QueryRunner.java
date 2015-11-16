@@ -56,7 +56,8 @@ public class QueryRunner {
 			reader.readMovies(myMap);
 			System.out.println("Tiempo de lectura del archivo en ms: " + (System.currentTimeMillis() - startReading));
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			System.out.println("Ocurio un error en la lecutra");
+			return;
 		}
 
 		KeyValueSource<String, Movie> source = KeyValueSource.fromMap(myMap);
@@ -91,16 +92,24 @@ public class QueryRunner {
 	private void analyzeQuery1(Job<String, Movie> job) {
 		String stringN = analyzer.get("N").toString();
 		Integer n = Integer.valueOf(stringN);
+		if (n < 0) {
+			System.out.println();
+			System.out.println("N debe ser mayor o igual a 0, se usara N=1");
+			n = 1;
+		}
+
 		ICompletableFuture<PriorityQueue<Entry<String, Integer>>> future = job.mapper(new Mapper_1())
 				.reducer(new Reducer_1()).submit(new Collator_1());
 		try {
 			PriorityQueue<Entry<String, Integer>> rta = future.get();
-
+			System.out.println();
 			System.out.println("Los " + n + " actores más votados fueron:");
+			System.out.println();
 			for (int i = 0; i < n; i++) {
 				Entry<String, Integer> actorWithVotes = rta.remove();
 				System.out.println(actorWithVotes.getKey() + ": " + actorWithVotes.getValue() + " votos");
 			}
+			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -108,15 +117,23 @@ public class QueryRunner {
 
 	private void analyzeQuery2(Job<String, Movie> job) {
 		String tope = analyzer.get("TOPE").toString();
+		if (Integer.valueOf(tope) < 0) {
+			System.out.println();
+			System.out.println("TOPE debe ser mayor o igual a 0, se usara TOPE=0");
+			tope = "0";
+		}
 		ICompletableFuture<PriorityQueue<Entry<String, List<Movie>>>> future = job.mapper(new Mapper_2(tope))
 				.reducer(new Reducer_2()).submit(new Collator_2());
 		try {
 			PriorityQueue<Entry<String, List<Movie>>> rta = future.get();
-
+			System.out.println();
+			System.out.println("Las peliculas con mejor metascore por año mayores a " + tope + ", son:");
+			System.out.println();
 			for (int i = 0; i < rta.size(); i++) {
 				Entry<String, List<Movie>> yearWithMovies = rta.remove();
 				System.out.println(yearWithMovies.getKey() + ": " + yearWithMovies.getValue());
 			}
+			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -127,10 +144,13 @@ public class QueryRunner {
 				.submit(new Collator_3());
 		try {
 			Map<ActorCouple, List<String>> rta = future.get();
+			System.out.println();
 			System.out.println("Las parejas de actores que más veces actuaron juntos fueron: ");
+			System.out.println();
 			for (Entry<ActorCouple, List<String>> entry : rta.entrySet()) {
 				System.out.println(entry.getKey() + ": " + entry.getValue());
 			}
+			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -142,10 +162,14 @@ public class QueryRunner {
 
 		Map<String, List<String>> rta;
 		try {
+			System.out.println();
+			System.out.println("Los actores fetiche para cada director son: ");
+			System.out.println();
 			rta = future.get();
 			for (Entry<String, List<String>> entry : rta.entrySet()) {
 				System.out.println(entry.getKey() + ": " + entry.getValue());
 			}
+			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
