@@ -50,11 +50,16 @@ public class QueryRunner {
 		myMap.clear();
 		MovieReader reader = new MovieReader(path);
 		JobTracker tracker = client.getJobTracker("default");
-
+		String startReading;
+		String finishReading;
+		long readingTime = 0;
+		long startWorking = 0;
 		try {
-			long startReading = System.currentTimeMillis();
+			startReading = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS"));
+			startWorking = System.currentTimeMillis();
 			reader.readMovies(myMap);
-			System.out.println("Tiempo de lectura del archivo en ms: " + (System.currentTimeMillis() - startReading));
+			readingTime = System.currentTimeMillis() - startWorking;
+			finishReading = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS"));
 		} catch (Exception e) {
 			System.out.println("Ocurrió un error en la lectura");
 			return;
@@ -62,10 +67,10 @@ public class QueryRunner {
 
 		KeyValueSource<String, Movie> source = KeyValueSource.fromMap(myMap);
 		Job<String, Movie> job = tracker.newJob(source);
-
-		System.out.println("Inicio del trabajo map/reduce: "
-				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
-		long startWorking = System.currentTimeMillis();
+		
+		
+		String mapReduceStartTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS"));
+		startWorking = System.currentTimeMillis();
 		switch (query) {
 		case QueryType.QUERY_1:
 			analyzeQuery1(job);
@@ -83,9 +88,20 @@ public class QueryRunner {
 			System.out.println("Incorrect query!");
 			return;
 		}
-		System.out.println("Fin del trabajo map/reduce: "
-				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
-		System.out.println("El map reduce duró: " + (System.currentTimeMillis() - startWorking));
+		System.out.println("Inicio de lectura del archivo: " + startReading);
+		
+		System.out.println("Fin de lectura del archivo: " + finishReading);
+		
+		System.out.println("La lectura duró: " + readingTime);
+		
+		System.out.println();
+		
+		System.out.println("Inicio del map reduce: " + mapReduceStartTime);
+		
+		System.out.println("Fin del trabajo de map reduce: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
+		
+		System.out.println("La lectura duró: " + (System.currentTimeMillis() - startWorking));
+		
 		analyzer.dump();
 	}
 

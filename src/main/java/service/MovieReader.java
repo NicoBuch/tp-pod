@@ -25,9 +25,6 @@ public class MovieReader {
 	}
 
 	public void readMovies(IMap<String, Movie> theIMap) throws JsonParseException, JsonMappingException, IOException {
-		System.out.println("Inicio de lectura del archivo: "
-				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
-		long startWorking = System.currentTimeMillis();
 		Reader aReader = new InputStreamReader(MovieReader.class.getResourceAsStream(filepath));
 		List<Movie> movies = new ObjectMapper().readValue(aReader, new TypeReference<List<Movie>>() {
 		});
@@ -36,8 +33,5 @@ public class MovieReader {
 				theIMap.put(m.getTitle(), m);
 			}
 		}
-		System.out.println("Fin de lectura del archivo: "
-				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")));
-		System.out.println("La lectura duró: " + (System.currentTimeMillis() - startWorking));
 	}
 }
